@@ -11,6 +11,8 @@ from django.core import serializers
 from .forms import AdminLoginForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from .utils import send_confirmation_email
+from django.contrib import messages
 
 def admin_login(request):
     if request.method == "POST":
@@ -138,26 +140,34 @@ def delete_event(request, pk):
     return render(request, 'events/delete_event.html', {'event': event})
 
 @login_required  # Ensure only logged-in users can register
+
 def register_for_event(request, pk):
     # Fetch the event using the primary key (pk)
-    event = Event.objects.get(pk=pk)
+    event = get_object_or_404(Event, pk=pk)
     
     # Check if the request is a POST (form submission)
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            # Save the registration with the current logged-in user and event
-            registration = form.save(commit=False)  # Don't save yet
+            
+            registration = form.save(commit=False)
             registration.event = event  # Associate the event with the registration
             registration.save()  # Save the registration
 
-            # Redirect to a registration success page or event detail page
-            return redirect('registration_success')  # Adjust to your success URL
+            # Send confirmation email
+            send_confirmation_email(form.cleaned_data['email'], event.title)
+
+            # Add a success message
+            messages.success(request, f"You have successfully registered for {event.title}. A confirmation email has been sent.")
+            
+            # Redirect to a registration success page
+            return redirect('registration_success') 
     else:
         form = RegistrationForm()  # Initialize an empty form
 
-    # Render the registration page with the form and event data
+   
     return render(request, 'events/register_for_event.html', {'form': form, 'event': event})
+
 
 def registration_success(request):
     return render(request, 'events/registration_success.html')
