@@ -1,0 +1,120 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Register for Event{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Register for Event: <span class="text-primary">{{ event.title }}</span></h1>
+
+        <!-- Event Registration Form -->
+        <form method="post" class="card p-4 shadow-sm border-0">
+            {% csrf_token %}
+            
+            <!-- Name Field -->
+            <div class="form-group mb-4">
+                <label for="id_name" class="font-weight-bold mr-3">Your Name</label>
+                {{ form.name }}
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group mb-4">
+                <label for="id_email" class="font-weight-bold mr-3">Email</label>
+                {{ form.email }}
+            </div>
+
+            <!-- Phone Field -->
+            <div class="form-group mb-4">
+                <label for="id_phone" class="font-weight-bold mr-3">Phone Number</label>
+                {{ form.phone }}
+            </div>
+
+            <!-- Message Field (Optional) -->
+            <div class="form-group mb-4">
+                <label for="id_message" class="font-weight-bold mr-3">Message (optional)</label>
+                {{ form.message }}
+            </div>
+
+            <!-- Event Field -->
+            <input type="hidden" name="event" value="{{ event.id }}">
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+
+        <!-- Cancel Registration Link -->
+        <div class="text-center mt-3">
+            <a href="{% url 'event_list' %}" class="btn btn-danger ">Cancel</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        /* Card Styling */
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* Rounded corners */
+            padding: 30px; /* Extra padding for better space around the form */
+        }
+
+        /* Remove the rising effect */
+        .card:hover {
+            transform: none; /* Ensure no movement or effect */
+        }
+
+        /* Input Fields */
+        .form-control {
+            border-radius: 8px; /* Rounded inputs */
+            padding: 10px;
+            border: 1px solid #ccc; /* Light gray border */
+            box-sizing: border-box; /* Ensure padding does not overflow */
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color); /* Highlight on focus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Light blue glow */
+        }
+
+        /* Labels */
+        .form-label {
+            font-weight: bold;
+            color: #333; /* Darker color for better contrast */
+        }
+
+        /* Submit Button */
+        .btn {
+            font-weight: bold;
+            padding: 12px; /* More padding for the button */
+            border-radius: 8px; /* Rounded corners */
+        }
+
+        /* Cancel Button */
+        .btn-outline-secondary {
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Spacing Between Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Centering */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Card Shadows and Effects */
+        .card-body {
+            padding: 20px;
+        }
+    </style>
+{% endblock %}

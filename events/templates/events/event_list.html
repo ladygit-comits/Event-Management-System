@@ -1,0 +1,66 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Event List{% endblock %}
+
+{% block content %}
+   
+    <div class="container mt-5">
+        <!-- Title -->
+        <h1 id="title">Event List</h1>
+
+        <div class="row" id="event-list">
+            {% for event in events %}
+                <div class="col-md-4 mb-3">
+                    <div class="card animate__animated animate__fadeInUp event-card">
+                        <img src="{{ event.image.url }}" class="card-img-top event-image" alt="{{ event.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ event.name }}</h5>
+                            <p class="card-text">{{ event.description }}</p>
+                            <div class="d-flex justify-content-between">
+                                <span><i class="fas fa-calendar-alt"></i> {{ event.date }}</span>
+                                <span><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
+                            </div>
+                            <a href="{% url 'register_for_event' pk=event.pk %}" class="btn btn-primary mt-3 ">Register</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        /* CSS for rising effect */
+        #title {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease; /* Slow transition for title */
+        }
+
+        #event-list {
+            display: flex;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease; /* Smooth transition for events */
+        }
+
+        /* Apply visibility to both title and events */
+        #title.visible, #event-list.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+
+    <script>
+        // Ensure the effect applies when the page has fully loaded
+        window.addEventListener('load', function () {
+            const title = document.getElementById('title');
+            const eventList = document.getElementById('event-list');
+            
+            // Apply rising effect to title and event list smoothly
+            title.classList.add('visible');  
+            eventList.classList.add('visible');  
+        });
+    </script>
+    
+{% endblock %}

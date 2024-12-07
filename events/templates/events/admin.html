@@ -1,0 +1,116 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Admin Login</h2>
+
+    <!-- Admin Login Form -->
+    <form method="post" class="card p-4 border-0 shadow-sm">
+        {% csrf_token %}
+        
+        <!-- Username Field -->
+        <div class="form-group mb-4">
+            <label for="id_username" class="font-weight-bold">Username</label>
+            {{ form.username|add_class:"form-control" }}
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group mb-4">
+            <label for="id_password" class="font-weight-bold">Password</label>
+            {{ form.password|add_class:"form-control" }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <!-- Display Errors -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger mt-3">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        /* Container Styling */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* Rounded corners */
+            padding: 30px; /* Extra padding for better space around the form */
+        }
+
+       
+        .card:hover {
+            transform: none; /* Ensure no movement or effect */
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form Input Styling */
+        .form-control {
+            border-radius: 8px; /* Rounded inputs */
+            padding: 10px;
+            border: 1px solid #ccc; /* Light gray border */
+            box-sizing: border-box; /* Ensure padding does not overflow */
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color); /* Highlight on focus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Light blue glow */
+        }
+
+        /* Button Styling */
+        .btn {
+            font-weight: bold;
+            padding: 12px; /* More padding for the button */
+            border-radius: 8px; /* Rounded corners */
+        }
+
+        /* Error Styling */
+        .alert-danger {
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        /* Cancel Button */
+        .btn-outline-secondary {
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Spacing Between Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Centering */
+        .text-center {
+            text-align: center;
+        }
+    </style>
+{% endblock %}

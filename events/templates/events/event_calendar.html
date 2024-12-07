@@ -1,0 +1,93 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Upcoming Events{% endblock %}
+
+{% block content %}
+
+
+    <div class="container my-5">
+        <!-- Title -->
+        <h1 id="title" class=" mb-4">Upcoming Events</h1>
+
+        <!-- Div to display events -->
+        <div id="event-list" class="row">
+            <!-- Event list will be populated here -->
+        </div>
+    </div>
+
+    <style>
+        /* CSS for rising effect */
+        #title {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease; /* Slow transition for title */
+        }
+
+        #event-list {
+            display: flex;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease; /* Smooth transition for events */
+        }
+
+        /* Apply visibility to both title and events */
+        #title.visible, #event-list.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+
+    <script>
+        // Parse the JSON data passed from the view
+        const events = JSON.parse('{{ events|escapejs }}');
+        
+        // Function to display events on the page
+        function displayEvents(events) {
+            const eventListDiv = document.getElementById("event-list");
+            
+            // Clear existing content in case it's being refreshed
+            eventListDiv.innerHTML = "";
+
+            events.forEach(event => {
+                // Create an event item for each event
+                const eventItem = document.createElement("div");
+                eventItem.classList.add("col-md-4", "mb-4", "event-card");
+
+                // Extract event data
+                const eventTitle = event.fields.title;
+                const eventDate = event.fields.date;
+                const eventLocation = event.fields.location;
+                const eventDescription = event.fields.description;
+
+                // Populate the event item with data
+                eventItem.innerHTML = `
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary">${eventTitle}</h3>
+                            <p class="card-text"><strong>Date:</strong> ${eventDate}</p>
+                            <p class="card-text"><strong>Location:</strong> ${eventLocation}</p>
+                            <p class="card-text">${eventDescription}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Append event item to the event list
+                eventListDiv.appendChild(eventItem);
+            });
+
+            // Apply the rising effect
+            const title = document.getElementById('title');
+            const eventList = document.getElementById('event-list');
+            
+            setTimeout(() => {
+                title.classList.add('visible');  // Apply effect to the title
+                eventList.classList.add('visible');  // Apply effect to the event list
+            }, 200);
+        }
+
+        // Call the function to display the events
+        displayEvents(events);
+    </script>
+
+{% endblock %}

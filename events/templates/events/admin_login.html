@@ -1,0 +1,88 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Admin Login</h2>
+
+    <!-- Admin Login Form -->
+    <form method="post" class="card p-4 border-0">
+        {% csrf_token %}
+        
+        <!-- Form Fields -->
+        <div class="form-group mb-3">
+            <label for="id_username" class="font-weight-bold">Username</label>
+            <input type="text" name="username" class="form-control" id="id_username" value="{{ form.username.value }}" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="id_password" class="font-weight-bold">Password</label>
+            <input type="password" name="password" class="form-control" id="id_password" value="{{ form.password.value }}" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <!-- Display Errors -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger mt-3">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        /* Container Styling */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: none;  
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Button Styling */
+        .btn {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-blue);
+        }
+
+        /* Error Styling */
+        .alert-danger {
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        /* Form Input Styling */
+        .form-control {
+            border-radius: 8px;
+            padding: 10px;
+        }
+    </style>
+{% endblock %}
