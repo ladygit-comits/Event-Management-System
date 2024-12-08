@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 import requests
@@ -193,8 +194,8 @@ def event_calendar(request):
     return render(request, 'events/event_calendar.html', {'events': events_json})
 
 def token(request):
-    consumer_key = '77bgGpmlOxlgJu6oEXhEgUgnu0j2WYxA'
-    consumer_secret = 'viM8ejHgtEmtPTHd'
+    consumer_key = os.getenv('consumer_key')
+    consumer_secret = os.getenv('consumer_secret')
     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
     r = requests.get(api_URL, auth=HTTPBasicAuth(
