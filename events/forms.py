@@ -8,8 +8,8 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'description', 'date', 'location', 'category', 'details', 'image']
         widgets = {
-            'date': DateTimeInput(attrs={'type': 'datetime-local'}),  # Using datetime-local input type for proper user input format
-        }
+        'date': DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+    }
 
 class RegistrationForm(forms.ModelForm):
     class Meta:

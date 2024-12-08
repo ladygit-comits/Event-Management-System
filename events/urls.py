@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('event_list', views.event_list, name='event_list'),
+    path('event_list/', views.event_list, name='event_list'),
     path('event/<int:pk>/', views.event_detail, name='event_detail'),
     path('event/<int:pk>/update/', views.update_event, name='update_event'),  # URL for event update
     path('event/<int:pk>/delete/', views.delete_event, name='delete_event'),  # URL for event delete
@@ -17,9 +17,11 @@ urlpatterns = [
     path('admin-login/', views.admin_login, name='admin_login'),
     path('registration-success/', views.registration_success, name='registration_success'),
     path('creation-success/', views.creation_success, name='creation_success'),
-    path('admin/', views.create_event, name='admin'),  # Admin event and category creation
-    path('create-category/', views.create_category, name='create_category'),  # Create category URL
-
+    path('admin/', views.create_event, name='admin'),  
+    path('create-category/', views.create_category, name='create_category'),  
+    path('pay/', views.pay, name='pay'),
+    path('stk/', views.stk, name='stk'),
+    path('token/', views.token, name='token'),
 ]
 
 if settings.DEBUG:

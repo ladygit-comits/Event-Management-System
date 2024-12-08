@@ -1,4 +1,11 @@
+import json
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+import requests
+from requests.auth import HTTPBasicAuth
+
+
+from events.credentials import LipanaMpesaPpassword, MpesaAccessToken
 from .models import Event, Registration
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
@@ -175,6 +182,7 @@ def registration_success(request):
 def creation_success(request):
     return render(request, 'events/creation_success.html')
 
+
 def event_calendar(request):
     # Get all events that are in the future
     events = Event.objects.filter(date__gte=timezone.now())
@@ -184,4 +192,53 @@ def event_calendar(request):
 
     return render(request, 'events/event_calendar.html', {'events': events_json})
 
+def token(request):
+    consumer_key = '77bgGpmlOxlgJu6oEXhEgUgnu0j2WYxA'
+    consumer_secret = 'viM8ejHgtEmtPTHd'
+    api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
+    r = requests.get(api_URL, auth=HTTPBasicAuth(
+        consumer_key, consumer_secret))
+    mpesa_access_token = json.loads(r.text)
+    validated_mpesa_access_token = mpesa_access_token["access_token"]
+
+    return render(request, 'token.html', {"token":validated_mpesa_access_token})
+
+def pay(request):
+   return render(request, 'events/pay.html')
+
+
+
+def stk(request):
+    if request.method == "POST":
+        phone = request.POST['phone']
+        amount = request.POST['amount']
+        access_token = MpesaAccessToken.validated_mpesa_access_token
+        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        headers = {"Authorization": "Bearer %s" % access_token}
+        
+        request_data = {
+            "BusinessShortCode": LipanaMpesaPpassword.Business_short_code,
+            "Password": LipanaMpesaPpassword.decode_password,
+            "Timestamp": LipanaMpesaPpassword.lipa_time,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": amount,
+            "PartyA": phone,
+            "PartyB": LipanaMpesaPpassword.Business_short_code,
+            "PhoneNumber": phone,
+            "CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",
+            "AccountReference": "Eventify",
+            "TransactionDesc": "Event Charges"
+        }
+        
+        response = requests.post(api_url, json=request_data, headers=headers)
+        response_data = response.json()
+        
+        # Check if the payment was successful
+        if response_data.get('ResponseCode') == '0':  # Assuming '0' indicates success
+            return HttpResponse('<p>Success! <a href="/event_list">Go Home</a></p>')
+        else:
+            # If payment failed, display an error message on the same page
+            return render(request, 'events/pay.html', {'error': 'Payment was not successful. Please try again.'})
+
+    return render(request, 'events/pay.html')

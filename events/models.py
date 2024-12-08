@@ -18,7 +18,7 @@ class Event(models.Model):
     details = models.TextField(default="No details available")
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Link events to users
     image = models.ImageField(upload_to='images/', blank=True, null=True)
-
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  
     def __str__(self):
         return self.title
 

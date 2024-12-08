@@ -1,0 +1,34 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Make a Payment{% endblock %}
+
+{% block content %}
+
+<h2>Make a Payment</h2>
+
+<!-- Display error message if payment failed -->
+{% if error %}
+  <div class="alert alert-danger">
+    <strong>Error:</strong> {{ error }}
+  </div>
+{% endif %}
+
+<!-- Payment Form -->
+<form method="post" action="{% url 'stk' %}">
+  {% csrf_token %}
+  
+  <!-- Phone Number Field -->
+  <label for="phone">Phone Number :</label>
+  <input type="number" id="phone" name="phone" value="254" placeholder="Phone Number" required>
+  <br><br>
+
+  <!-- Amount Field -->
+  <label for="amount">Amount :</label>
+  <input type="text" id="amount" name="amount" placeholder="Amount" required>
+  <br><br>
+  
+  <!-- Submit Button -->
+  <button type="submit">Submit</button>
+</form>
+
+{% endblock %}

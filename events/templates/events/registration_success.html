@@ -21,7 +21,7 @@
         .success-container h1 {
             text-align: center;
             margin-bottom: 30px;
-            color: #007bff;  /* Blue */
+            color: #007bff;  
         }
         .success-container p {
             text-align: center;
@@ -29,7 +29,7 @@
             color: #333;
         }
         .btn-custom {
-            background-color: #007bff;  /* Blue */
+            background-color: #007bff;  
             color: #fff;
             width: 100%;
             padding: 12px;
@@ -47,6 +47,8 @@
 <div class="success-container">
     <h1>Thank You for Registering!</h1>
     <p>Your registration was successful.</p>
+    <p style="font-size: 12px; color: #007bff;">A confirmation email has been sent. Please check your inbox or spam folder.</p>
+   <a href="{% url 'pay' %}" style="font-size: 15px; color: #082c53;"><p>Proceed to making payment.</p></a> 
     <a href="{% url 'event_list' %}" class="btn btn-custom">Go to Home</a>
 </div>
 
