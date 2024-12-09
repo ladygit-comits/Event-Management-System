@@ -43,7 +43,7 @@
 
         <!-- Cancel Registration Link -->
         <div class="text-center mt-3">
-            <a href="{% url 'event_list' %}" class="btn btn-danger ">Cancel</a>
+            <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-danger ">Back</a>
         </div>
     </div>
 {% endblock %}

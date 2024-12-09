@@ -195,7 +195,8 @@ def event_calendar(request):
 
 def token(request):
     consumer_key = os.getenv('consumer_key')
-    consumer_secret = os.getenv('consumer_secret')
+    os.getenv('consumer_secret')  
+    consumer_secret = 'viM8ejHgtEmtPTHd'
     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
     r = requests.get(api_URL, auth=HTTPBasicAuth(
