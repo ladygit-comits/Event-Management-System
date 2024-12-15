@@ -1,0 +1,91 @@
+{% extends 'events/base.html' %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome message with user's name -->
+    <h2 class="mb-4">Welcome, {{ user.first_name|default:user.username }}!</h2>  <!-- Display first name if available, else show username -->
+    <h4 class="mb-4">My Event Dashboard</h4>
+
+    <!-- User's Registrations -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>My Registrations</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Phone</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Registered On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in user_registrations %}
+                        <tr>
+                            <td>{{ registration.event.title }}</td>
+                            <td>{{ registration.phone }}</td>
+                            <td>{{ registration.message }}</td>
+                            <td>
+                                {% if registration.status == "approved" %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% elif registration.status == "declined" %}
+                                    <span class="badge bg-danger">Declined</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Waiting</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ registration.registered_on|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No event registrations found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- User's Waiting List -->
+    <div class="card">
+        <div class="card-header">
+            <h3>My Waiting List</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for waiting in user_waiting_list %}
+                        <tr>
+                            <td>{{ waiting.event.title }}</td>
+                            <td>
+                                {% if waiting.status == "approved" %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% elif waiting.status == "declined" %}
+                                    <span class="badge bg-danger">Declined</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Waiting</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center">No waiting list entries found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

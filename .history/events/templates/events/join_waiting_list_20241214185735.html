@@ -1,0 +1,19 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Join Waiting List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Join Waiting List for {{ event.title }}</h2>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" class="card p-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary w-100">Join Waiting List</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
