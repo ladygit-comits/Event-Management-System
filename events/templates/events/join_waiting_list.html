@@ -10,7 +10,27 @@
         <div class="col-md-6">
             <form method="post" class="card p-4">
                 {% csrf_token %}
-                {{ form.as_p }}
+                
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Name</label>
+                    {{ form.name }}  <!-- Render the input field -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}  <!-- Render the input field -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                    {{ form.phone_number }}  <!-- Render the input field -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.event.id_for_label }}">Event</label>
+                    {{ form.event }}  <!-- Render the dropdown  -->
+                </div>
+                
                 <button type="submit" class="btn btn-primary w-100">Join Waiting List</button>
             </form>
         </div>

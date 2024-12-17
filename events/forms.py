@@ -43,12 +43,12 @@ class CategoryForm(forms.ModelForm):
 class WaitingListForm(forms.ModelForm):
     class Meta:
         model = WaitingList
-        fields = ['event']  
+        fields = ['name', 'email', 'phone_number', 'event']  
 
     def save(self, user=None, commit=True):
         instance = super().save(commit=False)
         if user:
-            instance.user = user  # Set the user explicitly
+            instance.user = user 
         if commit:
             instance.save()
         return instance
