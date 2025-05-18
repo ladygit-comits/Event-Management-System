@@ -1,0 +1,65 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Notifications</h2>
+        <button id="markAllRead" class="btn btn-primary">Mark All as Read</button>
+    </div>
+
+    <!-- Notification List -->
+    <ul id="notificationList" class="list-group">
+        {% for notification in notifications %}
+            <li class="list-group-item d-flex justify-content-between align-items-center
+                {% if notification.is_read %} bg-light text-muted {% else %} bg-info text-white {% endif %}"
+                id="notification-{{ notification.id }}">
+                <span>{{ notification.message }}</span>
+                
+                <!-- Toggle between "Mark as Read" and "Mark as Unread" -->
+                {% if notification.is_read %}
+                    <button class="btn btn-sm btn-outline-secondary toggle-read" data-id="{{ notification.id }}" data-action="unread">
+                        Mark as Unread
+                    </button>
+                {% else %}
+                    <button class="btn btn-sm btn-outline-light toggle-read" data-id="{{ notification.id }}" data-action="read">
+                        Mark as Read
+                    </button>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p id="noNotifications" class="text-muted mt-3">No new notifications</p>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- JavaScript for Handling Read/Unread State -->
+<script>
+    // Mark All as Read
+    document.getElementById('markAllRead').addEventListener('click', function() {
+        fetch('/notifications/mark-all-read/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            }
+        }).then(() => location.reload());
+    });
+
+    // Toggle Read/Unread State
+    document.querySelectorAll('.toggle-read').forEach(button => {
+        button.addEventListener('click', function() {
+            const notificationId = this.dataset.id;
+            const action = this.dataset.action;
+
+            fetch(`/notifications/toggle-read/${notificationId}/${action}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            }).then(() => location.reload());
+        });
+    });
+</script>
+{% endblock %}

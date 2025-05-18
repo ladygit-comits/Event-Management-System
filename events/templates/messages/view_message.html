@@ -1,0 +1,18 @@
+{% extends 'events/base_user.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4>{{ message.subject }}</h4>
+            <small class="text-muted">From: {{ message.sender.username }} | {{ message.created_at|date:"M d, Y H:i" }}</small>
+        </div>
+        <div class="card-body">
+            <p>{{ message.body }}</p>
+        </div>
+        <div class="card-footer text-end">
+            <a href="{% url 'inbox' %}" class="btn btn-primary">&larr; Back to Inbox</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

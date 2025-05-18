@@ -1,0 +1,36 @@
+{% extends 'events/base_user.html' %}
+
+{% block title %}Event Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">{{ event.title }}</h1>
+    <div class="card mx-auto" style="max-width: 600px;">
+        <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 500px; object-fit: cover; object-position: top;">
+        <div class="card-body">
+            <p class="card-text"><strong>Description:</strong> {{ event.description }}</p>
+            <p class="card-text"><strong>Date:</strong> {{ event.date|date:"F j, Y, g:i a" }}</p>
+            <p class="card-text"><strong>Location:</strong> {{ event.location }}</p>
+            <p class="card-text"><strong>Price:</strong> Ksh {{ event.price }}</p>
+            <p class="card-text"><strong>Additional Details:</strong> {{ event.details }}</p>
+
+            {% if is_full %}
+                <div class="alert alert-warning">
+                    This event has reached full capacity. Join the waiting list below.
+                </div>
+                
+                    <a href="{% url 'join_waiting_list' event.id %}" class="btn btn-primary w-100">Waiting List</a>
+           
+            {% else %}
+                <form method="post" action="{% url 'register_for_event' event.id %}" class="card p-4">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary w-100">Register for Event</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="text-center mt-3">
+        <a href="{% url 'event_list' %}" class="btn btn-primary">Home</a>
+    </div>
+</div>
+{% endblock %}

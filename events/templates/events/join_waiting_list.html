@@ -1,39 +1,102 @@
-{% extends 'events/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Waiting List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background */
+            color: #343a40; /* Dark text */
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .btn-primary {
+            background-color: #007bff; /* Blue theme */
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .info-section {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .form-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% load widget_tweaks %}
+    <div class="container">
+        <!-- Page Header -->
+        <div class="header">
+            <h1>Join the Waiting List</h1>
+            <p class="lead">Sign up below to secure your spot if one becomes available for <strong>{{ event.title }}</strong>.</p>
+        </div>
 
-{% block title %}Join Waiting List{% endblock %}
+        <!-- Form Section -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h2 class="form-title text-center">Join the Waiting List</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Full Name</label>
+                            {{ form.name|add_class:"form-control" }}
+                        </div>
 
-{% block content %}
-<div class="container mt-5">
-    <h2 class="text-center">Join Waiting List for {{ event.title }}</h2>
-    
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form method="post" class="card p-4">
-                {% csrf_token %}
-                
-                <div class="form-group">
-                    <label for="{{ form.name.id_for_label }}">Name</label>
-                    {{ form.name }}  <!-- Render the input field -->
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">Email Address</label>
+                            {{ form.email|add_class:"form-control" }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                            {{ form.phone_number|add_class:"form-control" }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.event.id_for_label }}">Event</label>
+                            {{ form.event|add_class:"form-control" }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">Submit to Join</button>
+                    </form>
                 </div>
-                
-                <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">Email</label>
-                    {{ form.email }}  <!-- Render the input field -->
-                </div>
-                
-                <div class="form-group">
-                    <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
-                    {{ form.phone_number }}  <!-- Render the input field -->
-                </div>
-                
-                <div class="form-group">
-                    <label for="{{ form.event.id_for_label }}">Event</label>
-                    {{ form.event }}  <!-- Render the dropdown  -->
-                </div>
-                
-                <button type="submit" class="btn btn-primary w-100">Join Waiting List</button>
-            </form>
+            </div>
+        </div>
+
+        <!-- Additional Section -->
+        <div class="text-center mt-5">
+            <p>If you have any questions or concerns, feel free to <a href="{% url 'contact_us' %}">contact us</a>.</p>
+            <a href="{% url 'event_list' %}" class="btn btn-secondary">Back to Home</a>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

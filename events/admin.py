@@ -1,9 +1,23 @@
 from django.contrib import admin
-from .models import Event, Category, RSVP, Registration, WaitingList
+from .models import Event, Category, RSVP, Registration, WaitingList, ContactUs, Product, Notification, Profile, VendorProfile,Message
+from django.utils.html import format_html
+from django.urls import reverse
+
 
 # Register Event and Category
 admin.site.register(Event)
 admin.site.register(Category)
+admin.site.register(ContactUs)
+
+
+@admin.register(VendorProfile)
+
+class VendorAdmin(admin.ModelAdmin):
+    list_display = ['business_name', 'contact_person', 'phone_number', 'get_email']
+
+    def get_email(self, obj):
+        return obj.user.email
+    get_email.short_description = 'Email'
 
 @admin.register(RSVP)
 class RSVPAdmin(admin.ModelAdmin):
@@ -70,3 +84,16 @@ class WaitingListAdmin(admin.ModelAdmin):
         self.message_user(request, "Selected waiting list entries have been declined.")
 
     decline_waiting_list.short_description = "Decline selected waiting list entries"
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ['sender', 'recipient', 'subject', 'created_at', 'is_read', 'reply_link']
+    list_filter = ['is_read', 'created_at']
+    search_fields = ['sender__email', 'subject', 'body']
+
+    def reply_link(self, obj):
+        if not obj.reply_to and obj.sender != obj.recipient:
+            url = reverse('reply_message', args=[obj.id])
+            return format_html('<a class="button" href="{}">Reply</a>', url)
+        return "-"
+    reply_link.short_description = 'Reply'

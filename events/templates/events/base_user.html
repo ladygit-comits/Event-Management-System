@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="exclude">{% block title %}Eventify{% endblock %}</title>
+
+    {% load static %}
+
+    <link rel="icon" href="{% static 'img/party.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --hover-blue: rgba(0, 123, 255, 0.85);
+            --text-color: #ffffff;
+            --navbar-bg: #212529;
+        }
+
+        html, body { height: 100%; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        .navbar a { transition: color 0.3s ease, background-color 0.3s ease; }
+        .navbar a:hover { color: #5aa2f5 !important; }
+        .btn-outline-light:hover { background-color: var(--hover-blue); color: var(--text-color); }
+        .event-image { width: 100%; height: 250px; object-fit: cover; }
+        .card:hover { transform: translateY(-5px); transition: transform 0.3s ease; }
+        .footer { background-color: #fff; border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 20px 0; font-size: 0.9rem; color: #777; }
+        .profile-pic-navbar {
+            width: 35px; height: 35px; object-fit: cover;
+            border-radius: 50%; border: 2px solid #fff;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- 🔊 Audio Element -->
+    <audio id="notificationSound" src="{% static 'audio/notification-smooth-modern-stereo-332449.mp3' %}" preload="auto"></audio>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3 fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'event_list' %}">
+                <img src="{% static 'img/Event logo.png' %}" alt="Logo" width="40" height="40">
+                <span class="fw-bold fs-5">Eventify</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-3">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'event_list' %}"><i class="fas fa-home me-1"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'user_dashboard' %}"><i class="fas fa-user-circle me-1"></i>Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'event_calendar' %}"><i class="fas fa-calendar-alt me-1"></i>Calendar</a></li>
+
+                    <li class="nav-item position-relative">
+                        <a class="nav-link" href="{% url 'notifications' %}">
+                            <i class="fas fa-bell me-1"></i>Notifications
+                            {% if unread_notifications_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    <li class="nav-item position-relative">
+                        <a class="nav-link" href="{% url 'inbox' %}">
+                            <i class="fas fa-inbox me-1"></i>Inbox
+                            {% if unread_messages_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            {% if user.profile.profile_image %}
+                            <img src="{{ user.profile.profile_image.url }}" alt="Profile" class="profile-pic-navbar me-2">
+                            {% else %}
+                            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Default" class="profile-pic-navbar me-2">
+                            {% endif %}
+                            {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'send_message' %}">Contact Support</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'roleselection' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container flex-grow-1 mt-5 pt-3">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer text-center mt-auto">
+        <div class="container">
+            <p class="mb-0">© <strong>2024 Eventify</strong>. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap + Tooltips -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // 🔊 Play sound if there are new messages or notifications
+        window.addEventListener('DOMContentLoaded', () => {
+            const hasUnread = {{ unread_notifications_count|add:unread_messages_count }} > 0;
+            if (hasUnread) {
+                const audio = document.getElementById('notificationSound');
+                if (audio) {
+                    audio.play().catch(error => {
+                        console.log('Auto-play prevented:', error.message);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

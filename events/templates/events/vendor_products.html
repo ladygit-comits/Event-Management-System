@@ -1,0 +1,46 @@
+{% extends 'events/base_vendor.html' %}
+{% load static %}
+
+{% block title %}Vendor Products{% endblock %}
+
+{% block content %}
+<!-- Back Button -->
+<div class="back-btn text-start mb-3">
+    <a href="{% url 'vendor_dashboard' %}" class="btn btn-secondary">&larr; Back</a>
+</div>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4 fw-bold">Your Products</h2>
+
+    {% if products %}
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-4 d-flex">
+                    <div class="card shadow-sm border-0 h-100 w-100">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top img-fluid"
+                                 style="height: 200px; object-fit: cover;" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'img\default-product.png' %}" class="card-img-top img-fluid"
+                                 style="height: 200px; object-fit: contain; background: #f8f9fa;" alt="No image available">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                            <p class="text-muted mb-1">Category: {{ product.category }}</p>
+                            <p class="text-success mb-1">Price: KSh {{ product.price }}</p>
+                            <p class="text-info mb-3">Stock: {{ product.stock }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-primary me-2">Edit</a>
+                                <a href="{% url 'delete_product' product.id %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center mt-5">You don't have any products listed yet. <a href="{% url 'add_product' %}">Add a new product</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,15 +1,19 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    {% load static %}
+
     <!-- Favicon -->
     <link rel="icon" href="{% static 'img/party.png' %}">
-    <!-- Add Bootstrap CSS -->
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
             background-color: #f4f7fa;
@@ -76,12 +80,12 @@
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
-        .text-center {
-            text-align: center;
-        }
-
         .form-group {
             margin-bottom: 20px;
+        }
+
+        .text-center {
+            text-align: center;
         }
 
         .text-center p {
@@ -98,7 +102,10 @@
             text-decoration: underline;
         }
 
-        /* Responsive Design */
+        .back-btn {
+            margin: 20px 0 10px 0;
+        }
+
         @media (max-width: 767px) {
             .login-container {
                 padding: 20px;
@@ -116,50 +123,48 @@
 </head>
 <body>
 
-<div class="login-container">
-    <!-- Icon Section for Registration -->
-    <div class="icon-container">
-        <i class="fas fa-user-plus"></i>  <!-- User plus icon for registration -->
+<div class="container">
+    <!-- Back Button -->
+    <div class="back-btn text-start">
+        <a href="{% url 'roleselection' %}" class="btn btn-secondary">&larr; Back to Role Selection</a>
     </div>
 
-    <!-- Registration Form -->
-    <h2>Register</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <!-- Username Field -->
-        <div class="form-group">
-            <label for="id_username">Username</label>
-            {{ form.username }}
-        </div>
-         <!-- Email Field -->
-         <div class="form-group">
-            <label for="id_email">Email</label>
-            {{ form.email }}
-        </div>
-        <!-- Password Field -->
-        <div class="form-group">
-            <label for="id_password1">Password</label>
-            {{ form.password1 }}
+    <div class="login-container">
+        <!-- Icon Section -->
+        <div class="icon-container">
+            <i class="fas fa-user-plus"></i>
         </div>
 
-        <!-- Confirm Password Field -->
-        <div class="form-group">
-            <label for="id_password2">Confirm Password</label>
-            {{ form.password2 }}
-        </div>
+        <!-- Registration Form -->
+        <h2>Register</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                {{ form.password1 }}
+            </div>
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                {{ form.password2 }}
+            </div>
+            <button type="submit" class="btn btn-custom">Register</button>
 
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-custom">Register</button>
-
-        <!-- Login Link -->
-        <div class="text-center mt-3">
-            <p>Already have an account? <a href="{% url 'login' %}">Log in here</a></p>
-        </div>
-
-    </form>
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="{% url 'login' %}">Log in here</a></p>
+            </div>
+        </form>
+    </div>
 </div>
 
-<!-- Add Bootstrap JS -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

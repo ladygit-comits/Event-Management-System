@@ -1,0 +1,10 @@
+{% extends 'events/base_user.html' %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>✅ Your message has been sent!</h2>
+    <p>We'll get back to you as soon as possible.</p>
+    <a href="{% url 'vendor_dashboard' %}" class="btn btn-success mt-3">&larr; Back to Home</a>
+
+</div>
+{% endblock %}

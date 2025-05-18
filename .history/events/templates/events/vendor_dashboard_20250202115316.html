@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Welcome to Your Dashboard</h2>
+        <div class="card p-4 shadow-sm border-0">
+            <h4>Your Business Information</h4>
+            <p><strong>Business Name:</strong> {{ vendor.business_name }}</p>
+            <p><strong>Contact Person:</strong> {{ vendor.contact_person }}</p>
+            <p><strong>Phone Number:</strong> {{ vendor.phone_number }}</p>
+            <p><strong>Email:</strong> {{ vendor.email }}</p>
+            <div class="text-center mt-4">
+                <a href="{% url 'edit_vendor_profile' %}" class="btn btn-primary">Edit Profile</a>
+                <a href="{% url 'view_orders' %}" class="btn btn-secondary">View Orders</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

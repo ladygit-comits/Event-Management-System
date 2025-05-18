@@ -1,68 +1,90 @@
-{% extends 'events/base.html' %}
+{% extends 'events/base_user.html' %}
 
 {% block title %}My Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <!-- Welcome message with user's name -->
-    <h2 class="mb-4">Welcome To Your Event Dashboard, {{ user.first_name|default:user.username }}!</h2>  
+    <!-- Welcome message -->
+    <h2 class="mb-4" data-bs-toggle="tooltip" title="Your personal event dashboard!">
+        Welcome To Your Event Dashboard, {{ user.first_name|default:user.username }}!
+    </h2>
 
     <!-- User's Registrations -->
-    <div class="card mb-4">
+    <div class="card mb-4 animate__animated animate__fadeInUp">
         <div class="card-header">
             <h3>Your Registrations</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+                <table class="table table-striped align-middle">
+                    <thead class="table-light">
                         <tr>
                             <th>Event</th>
                             <th>Phone</th>
                             <th>Message</th>
-                            <th>Status</th>
+                            <th>Approval Status</th>
+                            <th>Payment Status</th>
                             <th>Registered On</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for registration in user_registrations %}
-                            <tr>
-                                <td><a href="{% url 'event_detail' registration.event.id %}">{{ registration.event.title }}</a></td>
-                                <td>{{ registration.phone }}</td>
-                                <td>{{ registration.message|truncatewords:10 }}</td>
-                                <td>
-                                    {% if registration.status == "approved" %}
-                                        <span class="badge bg-success">Approved</span>
-                                    {% elif registration.status == "declined" %}
-                                        <span class="badge bg-danger">Declined</span>
-                                    {% else %}
-                                        <span class="badge bg-warning">Waiting</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ registration.registered_on|date:"Y-m-d H:i" }}</td>
-                            </tr>
+                        <tr>
+                            <td>
+                                <a href="{% url 'event_detail' registration.event.id %}" data-bs-toggle="tooltip" title="View event details">
+                                    {{ registration.event.title }}
+                                </a>
+                            </td>
+                            <td>{{ registration.phone }}</td>
+                            <td>{{ registration.message|truncatewords:10 }}</td>
+                            <td>
+                                {% if registration.status == "approved" %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% elif registration.status == "declined" %}
+                                    <span class="badge bg-danger">Declined</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Waiting</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if registration.payment_status == "completed" %}
+                                    <span class="badge bg-success">Payment Completed</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Pending Payment</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ registration.registered_on|date:"Y-m-d H:i" }}</td>
+                        </tr>
                         {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    No event registrations found. <a href="{% url 'event_list' %}">Browse events</a>.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                You haven't registered for any events yet.<br>
+                                <a href="{% url 'event_list' %}" class="btn btn-outline-primary mt-2">Explore Events</a>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Browse More Events -->
+            <div class="text-center mt-4">
+                <a href="{% url 'event_list' %}" class="btn btn-primary btn-lg" data-bs-toggle="tooltip" title="Find more exciting events!">
+                    Browse More Events
+                </a>
             </div>
         </div>
     </div>
 
     <!-- User's Waiting List -->
-    <div class="card">
+    <div class="card animate__animated animate__fadeInUp">
         <div class="card-header">
             <h3>Your Waiting List</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+                <table class="table table-striped align-middle">
+                    <thead class="table-light">
                         <tr>
                             <th>Event</th>
                             <th>Status</th>
@@ -70,24 +92,29 @@
                     </thead>
                     <tbody>
                         {% for waiting in user_waiting_list %}
-                            <tr>
-                                <td><a href="{% url 'event_detail' waiting.event.id %}">{{ waiting.event.title }}</a></td>
-                                <td>
-                                    {% if waiting.status == "approved" %}
-                                        <span class="badge bg-success">Approved</span>
-                                    {% elif waiting.status == "declined" %}
-                                        <span class="badge bg-danger">Declined</span>
-                                    {% else %}
-                                        <span class="badge bg-warning">Waiting</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                <a href="{% url 'event_detail' waiting.event.id %}" data-bs-toggle="tooltip" title="View event details">
+                                    {{ waiting.event.title }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if waiting.status == "approved" %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% elif waiting.status == "declined" %}
+                                    <span class="badge bg-danger">Declined</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Waiting</span>
+                                {% endif %}
+                            </td>
+                        </tr>
                         {% empty %}
-                            <tr>
-                                <td colspan="2" class="text-center">
-                                    No waiting list entries found. <a href="{% url 'event_list' %}">Explore events</a>.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-4">
+                                Your waiting list is empty.<br>
+                                <a href="{% url 'event_list' %}" class="btn btn-outline-primary mt-2">Explore Events</a>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -95,4 +122,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.addEventListener('load', function () {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
 {% endblock %}

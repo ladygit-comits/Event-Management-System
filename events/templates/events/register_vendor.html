@@ -1,0 +1,155 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'img/party.png' %}">
+    <meta charset="UTF-8">
+    <title>Vendor Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            border-radius: 5px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <!-- Back Button -->
+    <div class="back-btn text-left">
+        <a href="{% url 'roleselection' %}" class="btn btn-secondary">&larr; Back to Role Selection</a>
+    </div>
+
+    <h2 class="text-center mb-4">Vendor Registration</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm border-0" autocomplete="off">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="id_business_name">Business Name</label>
+            {{ form.business_name|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_contact_person">Contact Person</label>
+            {{ form.contact_person|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_phone_number">Phone Number</label>
+            {{ form.phone_number|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">Email</label>
+            {{ form.email|add_class:"form-control" }} 
+            <script>
+                // Ensure email field doesn't get autofilled
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById("id_email").setAttribute("autocomplete", "off");
+                });
+            </script>
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description</label>
+            {{ form.description|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_logo">Logo</label>
+            {{ form.logo|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            {{ form.password1|add_class:"form-control" }} 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById("id_password1").setAttribute("autocomplete", "new-password");
+                });
+            </script>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirm Password</label>
+            {{ form.password2|add_class:"form-control" }} 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById("id_password2").setAttribute("autocomplete", "new-password");
+                });
+            </script>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+
+        <div class="text-center mt-3">
+            <p>Already have an account? <a href="{% url 'vendor_login' %}">Log in</a></p>
+        </div>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

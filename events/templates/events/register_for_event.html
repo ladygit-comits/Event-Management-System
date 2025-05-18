@@ -1,54 +1,11 @@
-{% extends 'events/base.html' %}
-
-{% block title %}Register for Event{% endblock %}
-
-{% block content %}
-    <div class="container my-5">
-        <h1 class="text-center mb-4">Register for Event: <span class="text-primary">{{ event.title }}</span></h1>
-
-        <!-- Event Registration Form -->
-        <form method="post" class="card p-4 shadow-sm border-0">
-            {% csrf_token %}
-            
-            <!-- Name Field -->
-            <div class="form-group mb-4">
-                <label for="id_name" class="font-weight-bold">Your Name</label>
-                {{ form.name }}
-            </div>
-
-            <!-- Email Field -->
-            <div class="form-group mb-4">
-                <label for="id_email" class="font-weight-bold">Email</label>
-                {{ form.email }}
-            </div>
-
-            <!-- Phone Field -->
-            <div class="form-group mb-4">
-                <label for="id_phone" class="font-weight-bold">Phone Number</label>
-                {{ form.phone }}
-            </div>
-
-            <!-- Message Field -->
-            <div class="form-group mb-4">
-                <label for="id_message" class="font-weight-bold">Message (optional)</label>
-                {{ form.message }}
-            </div>
-
-            <!-- Event Field -->
-            <input type="hidden" name="event" value="{{ event.id }}">
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary w-100">Register</button>
-        </form>
-
-        <!-- Cancel Registration -->
-        <div class="text-center mt-3">
-            <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-danger ">Back</a>
-        </div>
-    </div>
-{% endblock %}
-
-{% block extra_css %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register for Event</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         /* General Styling */
         body {
@@ -59,22 +16,22 @@
         /* Card Styling */
         .card {
             background-color: #ffffff;
-            border-radius: 15px; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
-            padding: 30px; 
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .card:hover {
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); 
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
 
         /* Form Inputs */
         .form-control {
-            border-radius: 8px; 
+            border-radius: 8px;
             padding: 10px;
-            border: 1px solid #ccc; 
+            border: 1px solid #ccc;
             box-sizing: border-box; /* Ensure padding does not overflow */
         }
 
@@ -86,7 +43,7 @@
         /* Form Labels */
         .form-label {
             font-weight: bold;
-            color: #333; 
+            color: #333;
         }
 
         /* Submit Button */
@@ -100,21 +57,21 @@
         }
 
         .btn-primary:hover {
-            background-color: #0056b3; 
+            background-color: #0056b3;
         }
 
         /* Cancel Button */
-        .btn-outline-secondary {
+        .btn-danger {
             font-weight: bold;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid #ccc;
-            color: #007bff;
+            color: #fff;
             transition: background-color 0.3s ease;
         }
 
-        .btn-outline-secondary:hover {
-            background-color: #f8f9fa;
+        .btn-danger:hover {
+            background-color: #dc3545;
         }
 
         /* Spacing Between Form Elements */
@@ -142,9 +99,61 @@
                 padding: 10px;
             }
 
-            .btn-outline-secondary {
+            .btn-danger {
                 padding: 10px;
             }
         }
     </style>
-{% endblock %}
+</head>
+<body>
+    {% load widget_tweaks %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Register for Event: <span class="text-primary">{{ event.title }}</span></h1>
+
+        <!-- Event Registration Form -->
+        <form method="post" class="card p-4 shadow-sm border-0">
+            {% csrf_token %}
+            
+            <!-- Name Field -->
+            <div class="form-group mb-4">
+                <label for="id_name" class="font-weight-bold">Your Name</label>
+                {{ form.name|add_class:"form-control" }}
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group mb-4">
+                <label for="id_email" class="font-weight-bold">Email</label>
+                {{ form.email|add_class:"form-control" }}
+            </div>
+
+            <!-- Phone Field -->
+            <div class="form-group mb-4">
+                <label for="id_phone" class="font-weight-bold">Phone Number</label>
+                {{ form.phone|add_class:"form-control" }}
+            </div>
+
+            <!-- Message Field -->
+            <div class="form-group mb-4">
+                <label for="id_message" class="font-weight-bold">Message (optional)</label>
+                {{ form.message|add_class:"form-control" }}
+            </div>
+
+            <!-- Event Field -->
+            <input type="hidden" name="event" value="{{ event.id }}">
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+
+        <!-- Cancel Registration -->
+        <div class="text-center mt-3">
+            <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+   
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

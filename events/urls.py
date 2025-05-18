@@ -3,6 +3,10 @@ from . import views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import notification_panel, toggle_notification_read_status, mark_all_notifications_as_read
+from django.urls import reverse_lazy
+
+
 
 urlpatterns = [
     path('event_list/', views.event_list, name='event_list'),
@@ -11,22 +15,68 @@ urlpatterns = [
     path('event/<int:pk>/delete/', views.delete_event, name='delete_event'),  
     path('event/<int:pk>/register/', views.register_for_event, name='register_for_event'),  
     path('calendar/', views.event_calendar, name='event_calendar'),  
-    path('', views.register, name='register'),
+    path('', views.role_selection_view, name='roleselection'),
+    path('register', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('admin-login/', views.admin_login, name='admin_login'),
-    path('registration-success/', views.registration_success, name='registration_success'),
+   path('registration-success/<int:event_id>/', views.registration_success, name='registration_success'),
+
     path('creation-success/', views.creation_success, name='creation_success'),
     path('admin/', views.create_event, name='admin'),  
     path('create-category/', views.create_category, name='create_category'),  
-    path('pay/', views.pay, name='pay'),
+    path('pay/<int:event_id>/', views.pay, name='pay'),
     path('stk/', views.stk, name='stk'),
     path('token/', views.token, name='token'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('waiting-list/join/<int:event_id>/', views.join_waiting_list, name='join_waiting_list'),
     path('waiting-list/success/<int:event_id>/', views.waiting_list_success, name='waiting_list_success'),
-    path("user_dashboard/", views.user_dashboard, name="user_dashboard"),
-]
+    path('user_dashboard/', views.user_dashboard, name="user_dashboard"),
+    path('contact-us/', views.contact_us, name='contact_us'),
+    path('contact-us/success/', views.contact_us_success, name='contact_us_success'),
+    path('vendor/register/', views.vendor_register, name='register_vendor'),
+    path('vendor/registration-success/', views.vendor_registration_success, name='vendor_registration_success'),
+    path('vendor/dashboard/', views.vendor_dashboard, name='vendor_dashboard'),
+    path('vendor/products/', views.vendor_products, name='vendor_products'),
+    path('vendor/edit-profile/', views.edit_vendor_profile, name='vendor_edit_profile'),
+    path('accounts/vendor_login/', views.vendor_login, name='vendor_login'),
+    path('vendor/edit-profile/', views.edit_vendor_profile, name='edit_vendor_profile'), 
+    path('vendor/orders/', views.view_orders, name='view_orders'), 
+    path('profile/', views.profile_view, name='profile'),
+    path('notifications/', notification_panel, name='notifications'),
+    path('notifications/mark-all-read/', mark_all_notifications_as_read, name='mark_all_notifications_as_read'),
+    path('notifications/toggle-read/<int:notification_id>/<str:action>/', toggle_notification_read_status, name='toggle_notification_read_status'),
+     path(
+        'password_change/',
+        auth_views.PasswordChangeView.as_view(
+            template_name='registration/password_change_form.html',
+            success_url=reverse_lazy('profile')  # 👈 Redirect here after success
+        ),
+        name='password_change'
+    ),
+    path(
+        'password_change/done/',
+        auth_views.PasswordChangeDoneView.as_view(
+            template_name='registration/password_change_done.html'
+        ),
+        name='password_change_done'
+    ),
+    path('vendor/add-sale/', views.add_manual_order, name='add_manual_order'),
+    path('vendor/add-product/', views.add_product, name='add_product'),
+    path('vendor/products/edit/<int:product_id>/', views.edit_product, name='edit_product'),
+    path('vendor/products/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('send-message/', views.send_message, name='send_message'),
+    path('vendor-send-message/', views.vendor_send_message, name='vendor_send_message'),
+    path('message-sent/', views.message_sent, name='message_sent'),
+    path('message-sent-admin/', views.message_sent_admin, name='message_sent_admin'),
+    path('reply-message/<int:message_id>/', views.reply_to_message, name='reply_message'),
+    path('inbox/', views.inbox, name='inbox'),
+    path('vendor-inbox/', views.vendor_inbox, name='vendor_inbox'),
+    path('message/<int:message_id>/', views.view_message, name='view_message'),
+    path('delete_account/', views.delete_account, name='delete_account'),
+    path('check-unread-counts/', views.check_unread_counts, name='check_unread_counts'),
+
+] 
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

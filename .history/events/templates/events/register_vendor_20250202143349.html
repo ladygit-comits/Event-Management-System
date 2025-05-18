@@ -1,0 +1,80 @@
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Vendor Registration</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm border-0">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_business_name">Business Name</label>
+                {{ form.business_name|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_contact_person">Contact Person</label>
+                {{ form.contact_person|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_phone_number">Phone Number</label>
+                {{ form.phone_number|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {{ form.username|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_category">Category</label>
+                {{ form.category|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_description">Description</label>
+                {{ form.description|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_logo">Logo</label>
+                {{ form.logo|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                {{ form.password1|add_class:"form-control" }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                {{ form.password2|add_class:"form-control" }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="{% url 'vendor_login' %}">Log in</a></p>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'event_list' %}" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

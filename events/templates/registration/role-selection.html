@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select Role</title>
+  
+  {% load static %}
+  
+<!-- Favicon -->
+<link rel="icon" href="{% static 'img/party.png' %}">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 25px 20px 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 460px;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .icon img {
+      height: 50px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      color: #0a2c66;
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+    }
+
+    .role-options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .role-card {
+      background: #f5faff;
+      border-left: 4px solid #007bff;
+      padding: 16px;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .role-card h3 {
+      font-size: 1.1rem;
+      color: #007bff;
+      margin-bottom: 4px;
+    }
+
+    .role-card p {
+      font-size: 0.9rem;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .role-btn.login {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .role-btn.register {
+      background-color: transparent;
+      border: 1px solid #007bff;
+      color: #007bff;
+    }
+
+    .role-btn.login:hover {
+      background-color: #0056b3;
+    }
+
+    .role-btn.register:hover {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <div class="icon">
+        <img src="{% static 'img/image.png' %}" alt="Event Icon">
+      </div>
+      <h2>Select Your Role</h2>
+    </div>
+
+    <div class="role-options">
+
+      <div class="role-card">
+        <h3>User</h3>
+        <p>Book and manage your event attendance.</p>
+        <div class="btn-container">
+          <a href="{% url 'login' %}" class="role-btn login">Login</a>
+          <a href="{% url 'register' %}" class="role-btn register">Register</a>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <h3>Vendor</h3>
+        <p>Offer your services to event organizers.</p>
+        <div class="btn-container">
+          <a href="{% url 'vendor_login' %}" class="role-btn login">Login</a>
+          <a href="{% url 'register_vendor' %}" class="role-btn register">Register</a>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <h3>Event Manager (Admin)</h3>
+        <p>Manage events, users, and vendors.</p>
+        <div class="btn-container">
+          <a href="{% url 'admin:login' %}" class="role-btn login" style="width: 100%">Login</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

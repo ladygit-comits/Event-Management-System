@@ -1,0 +1,51 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Notifications</h2>
+        <button id="markAllRead" class="btn btn-primary">Mark all as read</button>
+    </div>
+
+    <!-- Notification List -->
+    <ul id="notificationList" class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            New event added: Shaggy Dog Show
+            <span class="badge bg-info text-dark">New</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Your event submission is under review
+            <span class="badge bg-info text-dark">New</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Reminder: Update your vendor profile
+            <span class="badge bg-info text-dark">New</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Payment for event received successfully
+            <span class="badge bg-info text-dark">New</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Admin message: System maintenance at 9 PM
+            <span class="badge bg-info text-dark">New</span>
+        </li>
+    </ul>
+
+    <!-- No Notifications Message -->
+    <p id="noNotifications" class="text-muted mt-3" style="display: none;">
+        No new notifications
+    </p>
+</div>
+
+<!-- JavaScript for Mark All as Read -->
+<script>
+    document.getElementById('markAllRead').addEventListener('click', function() {
+        const notifications = document.querySelectorAll('#notificationList .list-group-item');
+        notifications.forEach(notification => notification.remove());
+        document.getElementById('noNotifications').style.display = 'block';
+    });
+</script>
+{% endblock %}

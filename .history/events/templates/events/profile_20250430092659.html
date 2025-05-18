@@ -1,0 +1,116 @@
+{% extends 'events/base_user.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-center">Update Your Profile</h3>
+                    <form method="POST" enctype="multipart/form-data" class="text-center">
+                        {% csrf_token %}
+
+                        <!-- Profile Image Upload -->
+                        <div class="mb-4 position-relative">
+                            <label for="id_profile_image" style="cursor: pointer;">
+                                <img id="profileImagePreview" 
+                                     src="{% if profile.profile_image %}{{ profile.profile_image.url }}{% else %}https://cdn-icons-png.flaticon.com/512/847/847969.png{% endif %}" 
+                                     alt="Profile Image" 
+                                     class="rounded-circle shadow" 
+                                     style="width: 120px; height: 120px; object-fit: cover;">
+                            </label>
+                            <input type="file" id="id_profile_image" name="profile_image" accept="image/*">
+
+                            <!-- Remove Profile Picture Button -->
+                            {% if profile.profile_image %}
+                                <div class="d-grid mt-2">
+                                    <button type="submit" name="remove_picture" value="true" class="btn btn-outline-danger btn-sm rounded-3">
+                                        Remove Profile Picture
+                                    </button>
+                                </div>
+                            {% endif %}
+                            <div class="small text-muted mt-2">Click the image to change your profile picture</div>
+                        </div>
+
+                        <h3 class="mb-4">Your Profile</h3>
+
+                        <!-- Profile Fields -->
+                        <div class="text-start">
+                            {{ profile_form.first_name|as_crispy_field }}
+                            {{ profile_form.last_name|as_crispy_field }}
+                            {{ profile_form.email|as_crispy_field }}
+                        </div>
+
+                        <!-- Change Password Button -->
+                        <div class="d-grid my-3">
+                            <a href="{% url 'password_change' %}" class="btn btn-outline-primary rounded-3">
+                                Change Password
+                            </a>
+                        </div>
+
+                        <!-- Notifications Toggle -->
+                        <div class="form-check form-switch text-start mb-4">
+                            {{ notif_form.notifications_enabled }}
+                            <label class="form-check-label ms-2" for="id_notifications_enabled">
+                                Enable Event Notifications
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3">
+                                Save Changes
+                            </button>
+                        </div>
+
+                        <!-- Delete Account Button -->
+                        <div class="d-grid mt-3">
+                            <button type="button" class="btn btn-outline-danger btn-sm rounded-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                Delete My Account
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to permanently delete your account? This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <form method="POST" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS for live image preview -->
+<script>
+document.getElementById('id_profile_image').addEventListener('change', function (event) {
+    const [file] = event.target.files;
+    if (file) {
+        document.getElementById('profileImagePreview').src = URL.createObjectURL(file);
+    }
+});
+</script>
+
+{% endblock %}

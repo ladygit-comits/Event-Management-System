@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+    <div id="root"></div> <!-- React will load here -->
+
+    <!-- Link React's build CSS -->
+    <link rel="stylesheet" href="{% static 'frontend/static/css/main.css' %}">
+
+    <!-- Load React's build JavaScript -->
+    <script src="{% static 'frontend/static/js/main.js' %}"></script>
+
+{% endblock %}

@@ -1,113 +1,123 @@
-{% extends 'events/base.html' %}
+{% extends 'events/base_user.html' %}
 
 {% block title %}Event List{% endblock %}
 
 {% block content %}
-   
-    <div class="container mt-5">
-        <!-- Title -->
-        <h1 id="title">Event List</h1>
 
-        <div class="row" id="event-list">
-            {% for event in events %}
-            <div class="col-md-4 mb-3">
-                <div class="card h-100 animate__animated animate__fadeInUp event-card">
-                    <img src="{{ event.image.url }}" class="card-img-top event-image img-fluid" alt="{{ event.name }}">
-                    <div class="card-body d-flex flex-column">
-                        <div class="mt-auto">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="event-title">{{ event.title }}</span>
-                                <span class="event-date"><i class="fas fa-calendar-alt"></i> {{ event.date|date:"F j, Y, g:i a" }}</span>
-                                <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
-                            </div>
-                            <p class="mt-2 text-primary">Price: Ksh {{ event.price }}</p>
-                            <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-primary">View Details</a>
-                        </div>
+<div class="container mt-5">
+    <!-- Title -->
+    <h1 id="title" data-bs-toggle="tooltip" data-bs-placement="top" title="Browse available events!">Event List</h1>
+
+    <div class="row" id="event-list">
+        {% for event in events %}
+        <div class="col-md-4 mb-3">
+            <div class="card animate__animated animate__fadeInUp event-card">
+                <img src="{{ event.image.url }}" onerror="this.onerror=null; this.src='/static/images/default-event.png';"
+                     class="card-img-top event-image img-fluid" alt="{{ event.title }}">
+                <div class="card-body d-flex flex-column">
+                    <div class="event-info mt-auto">
+                        <span class="event-title">{{ event.title }}</span>
+                        <span class="event-date"><i class="fas fa-calendar-alt"></i> {{ event.date|date:"F j, Y, g:i a" }}</span>
+                        <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
+                        <p class="mt-2 text-primary">Price: Ksh {{ event.price|floatformat:2 }}</p>
+                        <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-primary"
+                           data-bs-toggle="tooltip" title="View more about {{ event.title }}">View Details</a>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
+</div>
 
-    <style>
-        .d-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1rem;
-            flex-wrap: wrap;
-            gap: 10px;
+<style>
+    .event-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .event-title {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .event-date, .event-location {
+        color: #777;
+        font-size: 0.9rem;
+    }
+
+    .event-date i, .event-location i {
+        margin-right: 5px;
+    }
+
+    #title {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+    }
+
+    #event-list {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+    }
+
+    #title.visible, #event-list.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .event-image {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        object-fit: contain;
+        border-bottom: 1px solid #ddd;
+        background-color: #f8f9fa;
+    }
+
+    @media (max-width: 768px) {
+        .event-info {
+            text-align: center;
         }
-
         .event-title {
-            font-weight: bold;
-            color: #333;
+            font-size: 1rem;
         }
-
         .event-date, .event-location {
-            color: #777;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
-
-        .event-date i, .event-location i {
-            margin-right: 5px;
+        .card-body {
+            padding: 15px;
         }
+    }
 
-        @media (max-width: 768px) {
-            .d-flex {
-                flex-direction: column;
-                text-align: center;
-            }
+    @media (max-width: 576px) {
+        .card {
+            margin: 10px 0;
         }
+    }
+</style>
 
-        #title {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
+<script>
+    window.addEventListener('load', function () {
+        const title = document.getElementById('title');
+        const eventList = document.getElementById('event-list');
 
-        #event-list {
-            display: flex;
-            flex-wrap: wrap;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
+        title.classList.add('visible');
 
-        #title.visible, #event-list.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        setTimeout(() => {
+            eventList.classList.add('visible');
+        }, 300);
 
-        @media (max-width: 576px) {
-            .card {
-                margin: 10px 0;
-            }
-            .card-body {
-                padding: 15px;
-            }
-            .event-title {
-                font-size: 1rem;
-            }
-            .event-date, .event-location {
-                font-size: 0.8rem;
-            }
-        }
-
-        .event-image {
-            width: 100%;
-            height: auto;
-        }
-    </style>
-
-    <script>
-        window.addEventListener('load', function () {
-            const title = document.getElementById('title');
-            const eventList = document.getElementById('event-list');
-            title.classList.add('visible');  
-            eventList.classList.add('visible');  
+        // Initialize Bootstrap tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
         });
-    </script>
+    });
+</script>
 
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'events/base.html' %}
+
+{% load static %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+    <!-- React will mount here -->
+    <div id="root"></div>
+
+    <!-- Link React static files -->
+    <link rel="stylesheet" href="{% static 'frontend/static/css/main.css' %}">
+    <script src="{% static 'frontend/static/js/main.js' %}" defer></script>
+
+{% endblock %}

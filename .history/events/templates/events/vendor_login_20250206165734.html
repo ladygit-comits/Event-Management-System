@@ -1,0 +1,35 @@
+<!-- events/vendor_login.html -->
+
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <h2 class="text-center">Vendor Login</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.username|add_class:"form-control" }}
+                        {{ form.password|add_class:"form-control" }}
+
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="{% url 'register_vendor' %}">Sign up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

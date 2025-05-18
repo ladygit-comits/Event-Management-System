@@ -1,0 +1,15 @@
+{% extends 'events/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Reply to {{ original_message.sender.email }}</h2>
+    <p><strong>Original Subject:</strong> {{ original_message.subject }}</p>
+    <p><strong>Original Message:</strong> {{ original_message.body }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Send Reply</button>
+    </form>
+</div>
+{% endblock %}
