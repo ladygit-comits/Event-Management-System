@@ -12,9 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-import django
 from dotenv import load_dotenv
-from django.contrib.auth import get_user_model
 
 # Load environment variables from .env file
 load_dotenv()
@@ -75,8 +73,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'events',
     'widget_tweaks',
-    'cloudinary',
-    'cloudinary_storage',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -179,22 +175,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CLOUDINARY_STORAGE = {
-   'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+import django
+from django.contrib.auth import get_user_model
 
 django.setup()
 
 User = get_user_model()
 
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
-ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
-
-if ADMIN_USERNAME and ADMIN_EMAIL and ADMIN_PASSWORD:
-    if not User.objects.filter(username=ADMIN_USERNAME).exists():
-        User.objects.create_superuser(ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD)
+if not User.objects.filter(username='faith_admin').exists():
+    User.objects.create_superuser('admin', 'admin@example.com', 'F@ith2025$issawrap!')
