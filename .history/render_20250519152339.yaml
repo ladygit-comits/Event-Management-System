@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: eventify deploy - Event-Management-System
+    runtime: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn eventify.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://eventifyuser:lOWL0SjiCiXElRhggTnmixe00wjfh7jD@dpg-d0leb6je5dus73cgmea0-a.oregon-postgres.render.com/eventifydb_dq6g
+      - key: SECRET_KEY
+        value: django-insecure-k&7^groa_yb35tbr#)##%*)hk@!az)k_#1#sxq23ay!5y3@6zi
+      - key: DEBUG
+        value: "False"
+      - key: DJANGO_SETTINGS_MODULE
+        value: eventify.settings
