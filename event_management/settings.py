@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+import django
 from dotenv import load_dotenv
+from django.contrib.auth import get_user_model
 
 # Load environment variables from .env file
 load_dotenv()
@@ -174,3 +176,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+django.setup()
+
+User = get_user_model()
+
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+
+if ADMIN_USERNAME and ADMIN_EMAIL and ADMIN_PASSWORD:
+    if not User.objects.filter(username=ADMIN_USERNAME).exists():
+        User.objects.create_superuser(ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD)
