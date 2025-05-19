@@ -119,15 +119,16 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eventify',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'eventifydb_dq6g',
+        'USER': 'eventifyuser',
+        'PASSWORD': 'lOWL0SjiCiXElRhggTnmixe00wjfh7jD',
+        'HOST': 'dpg-d0leb6je5dus73cgmea0-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
