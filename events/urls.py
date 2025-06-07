@@ -20,8 +20,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('admin-login/', views.admin_login, name='admin_login'),
-   path('registration-success/<int:event_id>/', views.registration_success, name='registration_success'),
-
+    path('registration-success/<int:event_id>/', views.registration_success, name='registration_success'),
     path('creation-success/', views.creation_success, name='creation_success'),
     path('admin/', views.create_event, name='admin'),  
     path('create-category/', views.create_category, name='create_category'),  
@@ -77,7 +76,4 @@ urlpatterns = [
     path('check-unread-counts/', views.check_unread_counts, name='check_unread_counts'),
 
 ] 
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
