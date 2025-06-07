@@ -109,12 +109,16 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="footer text-center mt-auto">
-        <div class="container">
-            <p class="mb-0">© <strong>2024 Eventify</strong>. All Rights Reserved.</p>
-        </div>
-    </footer>
+   <footer id="footer" class="footer position-relative light-background" role="contentinfo">
+  <div class="container">
+    <div class="copyright text-center">
 
+      <p><small>© <span id="year"></span> <strong>Kavanda</strong>. All rights reserved.</small></p>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+        
     <!-- Bootstrap + Tooltips -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
