@@ -175,12 +175,14 @@
         {% endblock %}
     </div>
   <footer id="footer" class="footer position-relative light-background" role="contentinfo">
-    <div class="container">
-      <div class="copyright text-center">
-        <p><small>© <span id="year"></span> <strong>Kavanda</strong>. All rights reserved.</small></p>
-      </div>
-    </div>
-  </footer>
+  <div class="container">
+    <div class="copyright text-center">
+
+      <p><small>© <span id="year"></span> <strong>Kavanda</strong>. All rights reserved.</small></p>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
     
     <!-- Bootstrap JS and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
