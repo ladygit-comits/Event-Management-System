@@ -263,7 +263,7 @@ def register_for_event(request, pk):
 
             # Redirect differently for staff
             if request.user.is_staff:
-                return redirect('admin:index')  # Send staff back to admin dashboard quietly
+                return redirect('admin:index')  
             # Pass event_id in the redirect
             return redirect('registration_success', event_id=event.id)  # <-- Pass event_id here
     else:
@@ -414,14 +414,14 @@ def contact_us(request):
     if request.method == 'POST':
         form = ContactUsForm(request.POST)
         if form.is_valid():
-            # Save the form to the database (optional)
+            # Save the form to the database 
             form.save()
 
-            # Send an email (optional)
+            # Send an email
             subject = f"New Contact Us Message from {form.cleaned_data['name']}"
             message = form.cleaned_data['message']
             email_from = form.cleaned_data['email']
-            recipient_list = ['admin@example.com']  # Add your admin email here
+            recipient_list = ['faithwanjiiri@gmail.com']  
 
             send_mail(subject, message, email_from, recipient_list)
 
