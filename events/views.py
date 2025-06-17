@@ -620,7 +620,7 @@ def vendor_products(request):
     try:
         vendor = VendorProfile.objects.get(user=request.user)
         products = Product.objects.filter(vendor=vendor)
-    except Vendor.DoesNotExist:
+    except VendorProfile.DoesNotExist:
         products = []
 
     return render(request, 'events/vendor_products.html', {'products': products})
