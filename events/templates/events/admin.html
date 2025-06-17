@@ -25,7 +25,8 @@
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
-
+        <!-- Back to Role Selection Button -->
+        <a href="{% url 'roleselection' %}" class="btn btn-outline-secondary mt-3 w-100">⬅ Back to Role Selection</a>
     <!-- Display Errors -->
     {% if form.non_field_errors %}
         <div class="alert alert-danger mt-3">
