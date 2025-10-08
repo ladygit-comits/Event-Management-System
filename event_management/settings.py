@@ -127,14 +127,14 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'eventifydb_dq6g',
-        'USER': 'eventifyuser',
-        'PASSWORD': 'lOWL0SjiCiXElRhggTnmixe00wjfh7jD',
-        'HOST': 'dpg-d0leb6je5dus73cgmea0-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 
