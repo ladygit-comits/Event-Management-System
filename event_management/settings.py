@@ -187,14 +187,3 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-django.setup()
-
-User = get_user_model()
-
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
-ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
-
-if ADMIN_USERNAME and ADMIN_EMAIL and ADMIN_PASSWORD:
-    if not User.objects.filter(username=ADMIN_USERNAME).exists():
-        User.objects.create_superuser(ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD)
