@@ -40,7 +40,6 @@ def profile_view(request):
         notif_form = NotificationForm(request.POST, instance=profile)
         profile_image = request.FILES.get('profile_image')
 
-        # Remove profile picture
         if 'remove_picture' in request.POST:
             profile.profile_image.delete(save=True)
             messages.success(request, 'Your profile picture has been removed.')
@@ -66,7 +65,6 @@ def profile_view(request):
         'profile': profile,
     })
 
-# 🛑 Delete account view
 @login_required
 def delete_account(request):
     if request.method == 'POST':
@@ -74,7 +72,7 @@ def delete_account(request):
         logout(request)
         user.delete()
         messages.success(request, 'Your account has been permanently deleted.')
-        return redirect('roleselection')  # or wherever you want to send them after deletion
+        return redirect('roleselection')
 
     
 def admin_login(request):
@@ -84,13 +82,13 @@ def admin_login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
-            if user is not None and user.is_staff:  # Ensures only admin users can log in
+            if user is not None and user.is_staff:
                 login(request, user)
-                return redirect('admin')  # Redirect to event creation page
+                return redirect('admin')
             else:
                 form.add_error(None, "Invalid credentials or you are not an admin.")
     else:
-        form = AuthenticationForm()  # No initial data passed
+        form = AuthenticationForm()
     
     return render(request, 'events/admin_login.html', {'form': form})
 
@@ -99,24 +97,43 @@ def event_list(request):
     return render(request, 'events/event_list.html', {'events': events})
 
 
+# SINGLE event_detail function
 def event_detail(request, pk):
-    event = Event.objects.get(pk=pk)
-    return render(request, 'events/event_detail.html', {'event': event})
+    event = get_object_or_404(Event, pk=pk)
+    
+    waiting_list_form = None
+    if event.is_full():  
+        if request.method == 'POST':
+            waiting_list_form = WaitingListForm(request.POST)
+            if waiting_list_form.is_valid():
+                instance = waiting_list_form.save(commit=False)
+                instance.event = event
+                instance.save()
+                messages.success(request, "You have been added to the waiting list.")
+                return redirect('waiting_list_success', event_id=event.id)
+        else:
+            waiting_list_form = WaitingListForm()
+
+    context = {
+        'event': event,
+        'is_full': event.is_full(),
+        'waiting_list_form': waiting_list_form,
+    }
+    return render(request, 'events/event_detail.html', context)
 
 def register(request):
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)  # Use the customized form
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Log in the user immediately after registration
-            return redirect('login')  # Redirect to login page after registration
+            login(request, user)
+            return redirect('login')
     else:
-        form = CustomUserCreationForm()  # Initialize the empty form
+        form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
 
-
-
+# SINGLE user_login function
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -128,52 +145,21 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
 
-def event_detail(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    
-    # If the event is full, allow the user to join the waiting list
-    waiting_list_form = None
-    if event.is_full():  
-        if request.method == 'POST':
-            waiting_list_form = WaitingListForm(request.POST)
-            if waiting_list_form.is_valid():
-                instance = waiting_list_form.save(commit=False)
-                instance.event = event
-                instance.save()
-                messages.success(request, "You have been added to the waiting list.")
-                return redirect('waiting_list_success', event_id=event.id)  # Redirect after adding to waiting list
-        else:
-            waiting_list_form = WaitingListForm()
-
-    context = {
-        'event': event,
-        'is_full': event.is_full(),
-        'waiting_list_form': waiting_list_form,
-    }
-    return render(request, 'events/event_detail.html', context)
-
-def event_detail(request, pk):
-    event = get_object_or_404(Event, pk=pk)  # Fetch event by ID
-    return render(request, 'events/event_detail.html', {'event': event})
 
 @staff_member_required
 def create_event(request):
     if request.method == 'POST':
-        # Handling event form
         event_form = EventForm(request.POST)
-        # Handling category form
         category_form = CategoryForm(request.POST)
 
         if event_form.is_valid() and category_form.is_valid():
-            # Save Event
             event = event_form.save(commit=False)
-            event.user = request.user  # Assign the event to the logged-in user
+            event.user = request.user
             event.save()
 
-            # Save Category
             category = category_form.save()
             
-            return redirect('event_list')  # Redirect to the event list page after saving
+            return redirect('event_list')
     else:
         event_form = EventForm()
         category_form = CategoryForm()
@@ -183,24 +169,22 @@ def create_event(request):
         'category_form': category_form
     })
 
-# Category view
 @staff_member_required
 def create_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('create_event')  # Redirect back to the admin panel after saving
+            return redirect('create_event')
     else:
         form = CategoryForm()
 
     return render(request, 'events/create_category.html', {'form': form})
 
-# Update an existing event
 def update_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    if request.user != event.user:  # Ensure that only the event creator can edit the event
-        return redirect('event_list')  # Redirect to the event list if the user is not the owner
+    if request.user != event.user:
+        return redirect('event_list')
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
@@ -210,7 +194,6 @@ def update_event(request, pk):
         form = EventForm(instance=event)
     return render(request, 'events/update_event.html', {'form': form, 'event': event})
 
-# Delete an event
 def delete_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.user != event.user:
@@ -219,6 +202,7 @@ def delete_event(request, pk):
         event.delete()
         return redirect('event_list')
     return render(request, 'events/delete_event.html', {'event': event})
+
 @login_required
 def register_for_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
@@ -235,10 +219,9 @@ def register_for_event(request, pk):
                 if not request.user.is_staff:
                     messages.success(request, "You've been added to the waiting list.")
 
-                # Redirect differently for staff
                 if request.user.is_staff:
                     return redirect('admin:index')
-                return redirect('event_detail', event_id=event.id)
+                return redirect('event_detail', pk=event.id)
         else:
             waiting_list_form = WaitingListForm()
 
@@ -261,11 +244,9 @@ def register_for_event(request, pk):
             if not request.user.is_staff:
                 messages.success(request, f"You have successfully registered for {event.title}. A confirmation email has been sent.")
 
-            # Redirect differently for staff
             if request.user.is_staff:
                 return redirect('admin:index')  
-            # Pass event_id in the redirect
-            return redirect('registration_success', event_id=event.id)  # <-- Pass event_id here
+            return redirect('registration_success', event_id=event.id)
     else:
         form = RegistrationForm()
 
@@ -274,23 +255,17 @@ def register_for_event(request, pk):
         'event': event
     })
 
-
-
     
 def registration_success(request, event_id):
-    event = get_object_or_404(Event, id=event_id)  # Fetch the event using event_id
+    event = get_object_or_404(Event, id=event_id)
     return render(request, 'events/registration_success.html', {'event': event})
+
 def creation_success(request):
     return render(request, 'events/creation_success.html')
 
-
 def event_calendar(request):
-    # Get all events that are in the future
     events = Event.objects.filter(date__gte=timezone.now())
-    
-    # Serialize the queryset
     events_json = serializers.serialize('json', events)
-
     return render(request, 'events/event_calendar.html', {'events': events_json})
 
 def token(request):
@@ -308,14 +283,14 @@ def token(request):
 def pay(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     return render(request, 'events/pay.html', {'event': event})
+
 def stk(request):
     if request.method == "POST":
         phone = request.POST['phone']
         event_id = request.POST.get('event_id')
         event = get_object_or_404(Event, pk=event_id)
         
-        # Convert amount to float to avoid Decimal serialization issue
-        amount = float(event.price)  # Convert to float
+        amount = float(event.price)
 
         access_token = MpesaAccessToken.validated_mpesa_access_token
         api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
@@ -342,18 +317,11 @@ def stk(request):
             return HttpResponse('<p>Success! <a href="/event_list">Go Home</a></p>')
         else:
             return render(request, 'events/pay.html', {'error': 'Payment was not successful. Please try again.', 'event': event})
+
 def dashboard(request):
-   
-    # Get total events
     total_events = Event.objects.count()
-    
-    # Get total participants (count of all registrations)
     total_participants = Registration.objects.count()
-
-    # Get upcoming events (filter events based on the date)
     upcoming_events = Event.objects.filter(date__gte="2024-12-13").count()
-
-    # Get recent registrations 
     recent_registrations = Registration.objects.order_by('-registered_on')[:5]
     
     context = {
@@ -376,12 +344,9 @@ def join_waiting_list(request, event_id):
     if request.method == 'POST':
         form = WaitingListForm(request.POST)
         if form.is_valid():
-            # Assign the logged-in user before saving
-            waiting_list_entry = form.save(commit=False)  # Do not commit yet
-            waiting_list_entry.user = request.user  # Set the user explicitly
-            waiting_list_entry.save()  # Save it
-
-            # Redirect to success page
+            waiting_list_entry = form.save(commit=False)
+            waiting_list_entry.user = request.user
+            waiting_list_entry.save()
             return redirect('waiting_list_success', event_id=event.id)
         else:
             messages.error(request, "There was an error joining the waiting list. Please try again.")
@@ -391,17 +356,15 @@ def join_waiting_list(request, event_id):
     return render(request, 'events/join_waiting_list.html', {'form': form, 'event': event})
 
 
-
 def waiting_list_success(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     return render(request, 'events/waiting_list_success.html', {'event': event})
 
-# Ensure that the waiting list entries are created for the correct user
 @login_required
 def user_dashboard(request):
-    user_id = request.user.id  # Use the user ID to filter registrations and waiting list
-    user_registrations = Registration.objects.filter(user_id=user_id)  # Filter by user ID
-    user_waiting_list = WaitingList.objects.filter(user_id=user_id)  # Filter by user ID
+    user_id = request.user.id
+    user_registrations = Registration.objects.filter(user_id=user_id)
+    user_waiting_list = WaitingList.objects.filter(user_id=user_id)
 
     context = {
         "user_registrations": user_registrations,
@@ -414,10 +377,8 @@ def contact_us(request):
     if request.method == 'POST':
         form = ContactUsForm(request.POST)
         if form.is_valid():
-            # Save the form to the database 
             form.save()
 
-            # Send an email
             subject = f"New Contact Us Message from {form.cleaned_data['name']}"
             message = form.cleaned_data['message']
             email_from = form.cleaned_data['email']
@@ -425,7 +386,6 @@ def contact_us(request):
 
             send_mail(subject, message, email_from, recipient_list)
 
-            # Redirect to a thank you page or display a success message
             return redirect('contact_us_success')
 
     else:
@@ -441,8 +401,8 @@ def vendor_register(request):
         form = VendorRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             vendor_profile = form.save()
-            login(request, vendor_profile.user)  # Login the created user
-            return redirect('vendor_login')  # make sure this url name exists
+            login(request, vendor_profile.user)
+            return redirect('vendor_login')
         else:
             print(form.errors)
     else:
@@ -483,6 +443,7 @@ def vendor_login(request):
 
 def is_vendor(user):
     return hasattr(user, 'vendor') or user.__class__.__name__ == 'Vendor'
+
 @login_required
 def check_unread_counts(request):
     unread_notifications = Notification.objects.filter(user=request.user, is_read=False).count()
@@ -499,25 +460,22 @@ def vendor_dashboard(request):
     except VendorProfile.DoesNotExist:
         vendor = None
 
-    # Handle logo upload
     if request.method == 'POST' and 'logo' in request.FILES:
         logo = request.FILES['logo']
         vendor.logo = logo
         vendor.save()
         messages.success(request, '✅ Your logo has been updated!')
-        return redirect('vendor_dashboard')  # Redirect to avoid resubmitting form on refresh
+        return redirect('vendor_dashboard')
 
     orders = Order.objects.filter(product__vendor=vendor) if vendor else []
     total_orders = orders.count()
     pending_orders = orders.filter(status='Pending').count()
 
-    # Group recent orders by event
     grouped_orders = defaultdict(list)
     for order in orders.order_by('-date')[:10]:
         event_title = order.product.event.title if order.product and order.product.event else "Unassigned Event"
         grouped_orders[event_title].append(order)
 
-    # Prepare sales data for the chart
     sales_data = defaultdict(int)
     for order in orders:
         day = order.date.strftime('%Y-%m-%d')
@@ -536,6 +494,7 @@ def vendor_dashboard(request):
         'form': form,
     })
 
+# SINGLE add_product function
 @login_required
 def add_product(request):
     try:
@@ -552,14 +511,20 @@ def add_product(request):
             product = form.save(commit=False)
             product.vendor = vendor
             product.save()
-            return redirect('vendor_dashboard')  # after saving
+            return redirect('vendor_products')
     else:
         form = ProductForm()
 
     return render(request, 'events/add_product.html', {'form': form})
+
+# SINGLE edit_vendor_profile function
 @login_required
 def edit_vendor_profile(request):
-    vendor = Vendor.objects.get(user=request.user)
+    try:
+        vendor = request.user.vendorprofile
+    except VendorProfile.DoesNotExist:
+        return redirect('vendor_login')
+    
     if request.method == 'POST':
         form = VendorEditForm(request.POST, request.FILES, instance=vendor)
         if form.is_valid():
@@ -567,37 +532,17 @@ def edit_vendor_profile(request):
             return redirect('vendor_dashboard')
     else:
         form = VendorEditForm(instance=vendor)
-    return render(request, 'edit_vendor_profile.html', {'form': form})
-
-
-
-def edit_vendor_profile(request):
-    return render(request, 'events/edit_vendor_profile.html')  
+    
+    return render(request, 'events/edit_vendor_profile.html', {'form': form})
 
 def view_orders(request):
     return render(request, 'events/view_orders.html') 
 
 @login_required
-def add_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.vendor = VendorProfile.objects.get(user=request.user)
-            product.save()
-            return redirect('vendor_products')
-    else:
-        form = ProductForm()
-    return render(request, 'events/add_product.html', {'form': form})
-
-# Display notification panel
-@login_required
 def notification_panel(request):
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'events/notification.html', {'notifications': notifications})
 
-
-# Mark a notification as read/unread
 def toggle_notification_read_status(request, notification_id, action):
     notification = get_object_or_404(Notification, id=notification_id, user=request.user)
     
@@ -609,7 +554,6 @@ def toggle_notification_read_status(request, notification_id, action):
     notification.save()
     return JsonResponse({'status': 'success'})
 
-# Mark all notifications as read
 @login_required
 def mark_all_notifications_as_read(request):
     Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
@@ -659,7 +603,7 @@ def add_manual_order(request):
         if form.is_valid():
             order = form.save(commit=False)
             order.status = 'Completed'
-            order.user = request.user  # 👈 Automatically set user here
+            order.user = request.user
             order.save()
             messages.success(request, '✅ Sale recorded successfully!')
             return redirect('vendor_dashboard')
@@ -667,6 +611,7 @@ def add_manual_order(request):
         form = ManualOrderForm(vendor=vendor)
     
     return render(request, 'events/add_manual_order.html', {'form': form})
+
 @login_required
 def send_message(request):
     if request.method == 'POST':
@@ -721,7 +666,6 @@ def reply_to_message(request, message_id):
             reply.reply_to = original_message
             reply.save()
 
-            # ✨ Mark the original message as read
             original_message.is_read = True
             original_message.save()
 
@@ -730,7 +674,6 @@ def reply_to_message(request, message_id):
     else:
         form = ReplyForm()
 
-        # ✨ Mark as read when the admin just *opens* the reply page
         if not original_message.is_read:
             original_message.is_read = True
             original_message.save()
@@ -754,7 +697,6 @@ def vendor_inbox(request):
 def view_message(request, message_id):
     message = get_object_or_404(Message, id=message_id, recipient=request.user)
 
-    # Mark as read if not already
     if not message.is_read:
         message.is_read = True
         message.save()
