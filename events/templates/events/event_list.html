@@ -6,24 +6,53 @@
 
 <div class="container mt-5">
     <!-- Title -->
-    <h1 id="title" data-bs-toggle="tooltip" data-bs-placement="top" title="Browse available events!">Event List</h1>
+    <h1 id="title" data-bs-toggle="tooltip" data-bs-placement="top" title="Browse available events!">
+        Event List
+    </h1>
 
     <div class="row" id="event-list">
         {% for event in events %}
         <div class="col-md-4 mb-3">
             <div class="card animate__animated animate__fadeInUp event-card">
-                <img src="{{ event.image.url }}" onerror="this.onerror=null; this.src='/static/images/default-event.png';"
-                     class="card-img-top event-image img-fluid" alt="{{ event.title }}">
+
+                <!-- ✅ SAFE IMAGE FIX -->
+                {% if event.image %}
+                    <img src="{{ event.image.url }}"
+                         class="card-img-top event-image img-fluid"
+                         alt="{{ event.title }}">
+                {% else %}
+                    <img src="/static/images/default-event.png"
+                         class="card-img-top event-image img-fluid"
+                         alt="Default Event">
+                {% endif %}
+
                 <div class="card-body d-flex flex-column">
                     <div class="event-info mt-auto">
                         <span class="event-title">{{ event.title }}</span>
-                        <span class="event-date"><i class="fas fa-calendar-alt"></i> {{ event.date|date:"F j, Y, g:i a" }}</span>
-                        <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
-                        <p class="mt-2 text-primary">Price: Ksh {{ event.price|floatformat:2 }}</p>
-                        <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-primary"
-                           data-bs-toggle="tooltip" title="View more about {{ event.title }}">View Details</a>
+
+                        <span class="event-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ event.date|date:"F j, Y, g:i a" }}
+                        </span>
+
+                        <span class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            {{ event.location }}
+                        </span>
+
+                        <p class="mt-2 text-primary">
+                            Price: Ksh {{ event.price|floatformat:2 }}
+                        </p>
+
+                        <a href="{% url 'event_detail' pk=event.pk %}"
+                           class="btn btn-primary"
+                           data-bs-toggle="tooltip"
+                           title="View more about {{ event.title }}">
+                           View Details
+                        </a>
                     </div>
                 </div>
+
             </div>
         </div>
         {% endfor %}
@@ -55,12 +84,14 @@
         color: #333;
     }
 
-    .event-date, .event-location {
+    .event-date,
+    .event-location {
         color: #777;
         font-size: 0.9rem;
     }
 
-    .event-date i, .event-location i {
+    .event-date i,
+    .event-location i {
         margin-right: 5px;
     }
 
@@ -78,7 +109,8 @@
         transition: opacity 1s ease, transform 1s ease;
     }
 
-    #title.visible, #event-list.visible {
+    #title.visible,
+    #event-list.visible {
         opacity: 1;
         transform: translateY(0);
     }
@@ -95,12 +127,16 @@
         .event-info {
             text-align: center;
         }
+
         .event-title {
             font-size: 1rem;
         }
-        .event-date, .event-location {
+
+        .event-date,
+        .event-location {
             font-size: 0.8rem;
         }
+
         .card-body {
             padding: 15px;
         }
@@ -113,7 +149,6 @@
     }
 </style>
 
-
 <script>
     window.addEventListener('load', function () {
         const title = document.getElementById('title');
@@ -125,8 +160,11 @@
             eventList.classList.add('visible');
         }, 300);
 
-        // Initialize Bootstrap tooltips
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        // Bootstrap tooltips
+        const tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
             new bootstrap.Tooltip(tooltipTriggerEl);
         });
