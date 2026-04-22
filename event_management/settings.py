@@ -54,6 +54,18 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+# ✅ CSRF Configuration - FIX FOR 403 ERROR
+CSRF_TRUSTED_ORIGINS = [
+    'https://eventify-deploy-event-management-system.onrender.com',
+    'http://eventify-deploy-event-management-system.onrender.com',
+    'http://localhost:8000',
+    'http://localhost:3000',
+]
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = False
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  
 )
@@ -86,7 +98,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Add this line here
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,10 +138,6 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
-
-
 
 DATABASES = {
     'default': {
@@ -186,4 +194,3 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
