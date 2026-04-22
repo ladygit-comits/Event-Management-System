@@ -127,7 +127,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('login')
+            return redirect('event_list')  # ✅ Changed from 'login' to 'event_list'
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
